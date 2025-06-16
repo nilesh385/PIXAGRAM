@@ -1,87 +1,103 @@
-# Welcome to React Router!
+#### Link
 
-A modern, production-ready template for building full-stack React applications using React Router.
+# Run the following command first to run the backend server for clerk webhook.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+- ngrok http --url=relaxing-octopus-brief.ngrok-free.app 3000
 
-## Features
+# Here's the forwarding url of it (just for information)
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- https://relaxing-octopus-brief.ngrok-free.app
 
-## Getting Started
+# if the forwarding url is different than the above url,
 
-### Installation
+- then go to clerk dashboard -> webhooks
+- create new endpoint.
+- add the forwading url in the endpoint and also add '/app/webhooks' in it.
+- example url -> https://relaxing-octopus-brief.ngrok-free.app/api/webhooks
+- now everything should be working properly.
 
-Install the dependencies:
+## Project info
 
-```bash
-npm install
-```
+## Introduction
 
-### Development
+- PixaGram is a clone of Instagram.
 
-Start the development server with HMR:
+## What technologies are used for this project?
 
-```bash
-npm run dev
-```
+## This project is built with .
 
-Your application will be available at `http://localhost:5173`.
+- React JS
+- TypeScript
+- Tailwind CSS
+- shadcn-ui
+- Clerk Authentication
+- Supabase
 
-## Building for Production
+## Core Features (Essential):
 
-Create a production build:
+# User Authentication:
 
-```bash
-npm run build
-```
+- Sign up with email/password.
+- Login/logout.
+- Social login (Google, GitHub ).
 
-## Deployment
+# User Profiles:
 
-### Docker Deployment
+- Profile creation (username, bio, profile picture).
+- View other users' profiles.
+- Edit profile information.
 
-To build and run using Docker:
+# Post Creation:
 
-```bash
-docker build -t my-app .
+- Upload images (and potentially short videos).
+- Add captions/descriptions to posts.
+- Hashtag support (basic parsing and display).
 
-# Run the container
-docker run -p 3000:3000 my-app
-```
+# Post Display:
 
-The containerized application can be deployed to any platform that supports Docker, including:
+- Display posts in a feed (reverse chronological order).
+- Display post images/videos.
+- Display post captions and timestamps.
+- Like/unlike posts.
+- Display number of likes.
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+# Following/Followers:
 
-### DIY Deployment
+-Follow/unfollow other users.
+-Display a list of followers and following.
+-Display posts from followed users in the main feed.
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
+## Secondary Features (Enhancements):
 
-Make sure to deploy the output of `npm run build`
+# Comments:
 
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
+- Add comments to posts.
+- Display comments below posts.
+- Like/unlike comments (optional).
 
-## Styling
+# Search:
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+- Search for users by username.
+- Search for posts by hashtags (optional).
 
----
+# Notifications:
 
-Built with ❤️ using React Router.
+- Like, comment, and follow notifications
+- Direct message notifications
+
+# Settings:
+
+- Account privacy settings
+- Password change
+- Email and phone number verification
+- Two-factor authentication
+
+# Direct Messaging (DM - Basic):
+
+- Send text messages to other users.
+- Display message history.
+
+# Stories (Simplified):
+
+- Upload temporary photos/videos (disappearing after 24 hours).
+- View stories from followed users.
