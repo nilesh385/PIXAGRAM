@@ -91,6 +91,7 @@ export default function CreatePost() {
         image: image_url || null,
       });
       if (postError) {
+        await supabase.storage.from("images").remove([image_url]);
         toast.error(postError.message);
         return;
       }

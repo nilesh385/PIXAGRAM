@@ -9,7 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 const app = express();
 dotenv.config({ path: "./.env" });
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_KEY;
+const supabaseKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.use(
@@ -27,7 +27,7 @@ app.post(
   // This is a generic method to parse the contents of the payload.
 
   async (req, res) => {
-    const SIGNING_SECRET = process.env.VITE_SIGNING_SECRET;
+    const SIGNING_SECRET = process.env.VITE_CLERK_WEBHOOK_SIGNING_SECRET;
 
     if (!SIGNING_SECRET) {
       throw new Error(
@@ -77,9 +77,11 @@ app.post(
 
     //creating user profile
     if (evt.type === "user.created") {
+      // console.log(evt.data);
       const { error: createProfileError } = await supabase
         .from("users")
         .insert({
+          user_id: evt.data.id,
           username: evt.data.username,
           fullname: evt.data.first_name + " " + evt.data.last_name,
           email: evt.data.email_addresses[0].email_address,
@@ -87,7 +89,7 @@ app.post(
         });
       if (createProfileError) {
         console.log(
-          "Error while creating the profile:: ",
+          "Error while creating the user profile:: ",
           createProfileError.message
         );
       } else console.log("Profile Created...");

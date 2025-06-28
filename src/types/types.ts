@@ -8,7 +8,13 @@ export type User = {
   bio: string;
   created_at: string;
 };
-
+export type PostType = {
+  post_id: string;
+  title: string;
+  description: string;
+  image: string;
+  created_at: string;
+};
 export const postSchema = z.object({
   title: z.string({
     required_error: "Title is required.",

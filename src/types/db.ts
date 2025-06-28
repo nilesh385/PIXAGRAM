@@ -5,7 +5,6 @@ export interface Database {
     fullname: string;
     email: string;
     image: string;
-    bio: string;
     created_at: string;
   };
   posts: {

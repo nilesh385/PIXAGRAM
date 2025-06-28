@@ -10,12 +10,12 @@ export default function Signup() {
   return (
     <header>
       <SignedOut>
-        <Button className="p-0">
+        <Button variant={"default"}>
           <SignInButton />
         </Button>
       </SignedOut>
       <SignedIn>
-        <Button className="p-0">
+        <Button size={"icon"} className="p-0 rounded-full ">
           <UserButton />
         </Button>
       </SignedIn>

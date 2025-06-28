@@ -11,9 +11,9 @@ export default function App() {
     <div>
       <Header />
       <Routes>
-        {isSignedIn && <CreatePost />}
         <Route path="/" element={isSignedIn ? <LoggedInHome /> : <Home />} />
       </Routes>
+      {isSignedIn && <CreatePost />}
     </div>
   );
 }

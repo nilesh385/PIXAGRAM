@@ -16,88 +16,121 @@
 - example url -> https://relaxing-octopus-brief.ngrok-free.app/api/webhooks
 - now everything should be working properly.
 
-## Project info
+# 📸 PixaGram
 
-## Introduction
+**PixaGram** is a modern Instagram clone built using the MERN stack and other modern tools. It offers all core social media functionalities like posts, user profiles, likes, comments, following, direct messaging, and more — with a clean and responsive UI.
 
-- PixaGram is a clone of Instagram.
+---
 
-## What technologies are used for this project?
+## 🚀 Tech Stack
 
-## This project is built with .
+This project is built with:
 
-- React JS
-- TypeScript
-- Tailwind CSS
-- shadcn-ui
-- Clerk Authentication
-- Supabase
+- ⚛️ **React.js** — Component-based frontend UI library
+- 🔡 **TypeScript** — Strongly-typed JavaScript
+- 🎨 **Tailwind CSS** — Utility-first CSS framework
+- 🧩 **shadcn/ui** — Accessible and customizable UI components
+<!-- - 🌐 **NodeJS** — Javascipt based Backend
+- 🗄️ **MongoDB** — Document Databse (Database)
+- 🫙 **Cloudinary** — Storage (Images) -->
+- 🔐 **Clerk** — Authentication provider (Email, Google, GitHub)
+- 🗄️ **Supabase** — Realtime backend service (Database, Auth, Storage)
 
-## Core Features (Essential):
+---
 
-# User Authentication:
+## 🌟 Core Features
 
-- Sign up with email/password.
-- Login/logout.
-- Social login (Google, GitHub ).
+### 🔐 User Authentication
 
-# User Profiles:
+- Email/password sign up and login
+- Social login with Google and GitHub
+- Secure logout
 
-- Profile creation (username, bio, profile picture).
-- View other users' profiles.
-- Edit profile information.
+### 👤 User Profiles
 
-# Post Creation:
+- Create profile with username, bio, and profile picture
+- View other users’ profiles
+- Edit and update own profile
 
-- Upload images (and potentially short videos).
-- Add captions/descriptions to posts.
-- Hashtag support (basic parsing and display).
+### 🖼️ Post Creation
 
-# Post Display:
+- Upload image posts (optionally videos)
+- Add captions with hashtags
+- Basic hashtag detection and linking
 
-- Display posts in a feed (reverse chronological order).
-- Display post images/videos.
-- Display post captions and timestamps.
-- Like/unlike posts.
-- Display number of likes.
+### 📰 Post Display
 
-# Following/Followers:
+- Feed shows posts in reverse chronological order
+- Show post image, caption, timestamp
+- Like/unlike functionality
+- Show like counts
 
--Follow/unfollow other users.
--Display a list of followers and following.
--Display posts from followed users in the main feed.
+### 👥 Following System
 
-## Secondary Features (Enhancements):
+- Follow/unfollow users
+- View followers and following lists
+- Main feed shows posts from followed users
 
-# Comments:
+---
 
-- Add comments to posts.
-- Display comments below posts.
-- Like/unlike comments (optional).
+## 🔧 Secondary Features
 
-# Search:
+### 💬 Comments
 
-- Search for users by username.
-- Search for posts by hashtags (optional).
+- Add and view comments on posts
+- Optional: Like/unlike comments
 
-# Notifications:
+### 🔍 Search
 
-- Like, comment, and follow notifications
-- Direct message notifications
+- Search users by username
+- Optional: Search posts by hashtags
 
-# Settings:
+### 🔔 Notifications
 
-- Account privacy settings
-- Password change
-- Email and phone number verification
-- Two-factor authentication
+- Notifications for:
+  - New likes
+  - New comments
+  - New followers
+- Optional: Direct message alerts
 
-# Direct Messaging (DM - Basic):
+### ⚙️ User Settings
 
-- Send text messages to other users.
-- Display message history.
+- Privacy controls (public/private)
+- Change password
+- Email and phone verification
+- Two-Factor Authentication (2FA)
 
-# Stories (Simplified):
+### ✉️ Direct Messaging (Basic)
 
-- Upload temporary photos/videos (disappearing after 24 hours).
-- View stories from followed users.
+- Send/receive text messages
+- View full conversation history
+
+### 📷 Stories (Simplified)
+
+- Upload temporary photos/videos
+- Auto-expire after 24 hours
+- View stories of users you follow
+
+---
+
+### 📌 Future Improvements
+
+Advanced DM with media support
+
+Story reactions
+
+Real-time notifications with WebSockets
+
+Explore page with trending posts
+
+Post analytics and insights
+
+### 🙌 Acknowledgements
+
+Clerk.dev
+
+Supabase
+
+shadcn/ui
+
+Tailwind CSS
