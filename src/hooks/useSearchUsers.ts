@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import useCreateClerkSupabaseClient from "./useCreateClerkSupabaseClient";
 import { useQuery } from "@tanstack/react-query";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/types/db";
 
-const searchUsers = async (supabase: SupabaseClient, text: string) => {
+const searchUsers = async (
+  supabase: SupabaseClient<Database>,
+  text: string
+) => {
   if (!text) return [];
   const { data, error } = await supabase
     ?.from("users")

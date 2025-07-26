@@ -15,4 +15,12 @@ export interface Database {
     image: string;
     created_at: string;
   };
+  comments: {
+    id: string;
+    post_id: string;
+    user_id: string;
+    content: string;
+    is_liked: boolean;
+    created_at: string;
+  };
 }

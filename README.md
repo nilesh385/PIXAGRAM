@@ -30,9 +30,6 @@ This project is built with:
 - 🔡 **TypeScript** — Strongly-typed JavaScript
 - 🎨 **Tailwind CSS** — Utility-first CSS framework
 - 🧩 **shadcn/ui** — Accessible and customizable UI components
-<!-- - 🌐 **NodeJS** — Javascipt based Backend
-- 🗄️ **MongoDB** — Document Databse (Database)
-- 🫙 **Cloudinary** — Storage (Images) -->
 - 🔐 **Clerk** — Authentication provider (Email, Google, GitHub)
 - 🗄️ **Supabase** — Realtime backend service (Database, Auth, Storage)
 
