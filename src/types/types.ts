@@ -9,10 +9,11 @@ export type User = {
   created_at: string;
 };
 export type PostType = {
-  post_id: string;
-  title: string;
-  description: string;
-  image: string;
+  id: string;
+  user_id: string;
+  image_url: string;
+  title?: string | null;
+  description?: string | null;
   created_at: string;
 };
 export type CommentType = {

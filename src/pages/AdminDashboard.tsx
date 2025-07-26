@@ -9,12 +9,17 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { FileTextIcon, HomeIcon, User2Icon } from "lucide-react";
+import { FileTextIcon, Home, HomeIcon, User2Icon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 export default function AdminDashboard() {
   const items = [
+    {
+      name:"Home",
+      path:"/admin",
+      icon:<Home className="size-5"/>
+    },
     {
       name: "Users",
       path: "/admin/users",

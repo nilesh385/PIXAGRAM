@@ -1,3 +1,99 @@
-export default function UsersList() {
-  return <div>UsersList</div>;
-}
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
+import type { User } from '@/types/types';
+import useCreateClerkSupabaseClient from '@/hooks/useCreateClerkSupabaseClient';
+
+const USERS_PER_PAGE = 10;
+
+const fetchUsers = async (page:number):Promise<User[]> => {
+  const from = page * USERS_PER_PAGE;
+  const to = from + USERS_PER_PAGE - 1;
+  const supabase= useCreateClerkSupabaseClient()
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .range(from, to);
+
+  if (error) throw error;
+  return data as User[];
+};
+
+const UserList = () => {
+  const [page, setPage] = useState(0);
+
+  const {
+    data: users=[],
+    isLoading,
+    isError,
+    error,
+  } = useQuery<User[],Error>({
+    queryKey: ['users', page],
+    queryFn: () => fetchUsers(page),
+    keepPreviousData: true,
+  });
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">All Users</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(USERS_PER_PAGE)].map((_, idx) => (
+                <Skeleton key={idx} className="h-20 rounded-xl" />
+              ))}
+            </div>
+          ) : isError ? (
+            <p className="text-red-500">Error: {error.message}</p>
+          ) : (
+            <div className="space-y-4">
+              {users.map((user) => (
+                <Card key={user.id} className="bg-muted/50">
+                  <CardContent className="p-4">
+                    <h3 className="text-lg font-semibold">{user.username || 'Unnamed User'}</h3>
+                    <p className="text-muted-foreground">{user.bio || 'No bio provided.'}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="flex items-center justify-between">
+        <Button
+          variant="outline"
+          disabled={page === 0}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+        >
+          Previous
+        </Button>
+
+        <span className="text-muted-foreground">Page {page + 1}</span>
+
+        <Button
+          variant="outline"
+          disabled={users?.length < USERS_PER_PAGE}
+          onClick={() => setPage((prev) => prev + 1)}
+        >
+          Next
+        </Button>
+      </div>
+
+      <Separator />
+    </div>
+  );
+};
+
+export default UserList;
