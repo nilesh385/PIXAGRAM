@@ -1,26 +1,21 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
-import type { User } from '@/types/types';
-import useCreateClerkSupabaseClient from '@/hooks/useCreateClerkSupabaseClient';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import type { User } from "@/types/types";
+import useCreateClerkSupabaseClient from "@/hooks/useCreateClerkSupabaseClient";
 
 const USERS_PER_PAGE = 10;
 
-const fetchUsers = async (page:number):Promise<User[]> => {
+const fetchUsers = async (page: number): Promise<User[]> => {
   const from = page * USERS_PER_PAGE;
   const to = from + USERS_PER_PAGE - 1;
-  const supabase= useCreateClerkSupabaseClient()
+  const supabase = useCreateClerkSupabaseClient();
   const { data, error } = await supabase
-    .from('users')
-    .select('*')
+    .from("users")
+    .select("*")
     .range(from, to);
 
   if (error) throw error;
@@ -31,14 +26,14 @@ const UserList = () => {
   const [page, setPage] = useState(0);
 
   const {
-    data: users=[],
+    data: users = [],
     isLoading,
     isError,
     error,
-  } = useQuery<User[],Error>({
-    queryKey: ['users', page],
+  } = useQuery<User[], Error>({
+    queryKey: ["users", page],
     queryFn: () => fetchUsers(page),
-    keepPreviousData: true,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   return (
@@ -59,10 +54,11 @@ const UserList = () => {
           ) : (
             <div className="space-y-4">
               {users.map((user) => (
-                <Card key={user.id} className="bg-muted/50">
+                <Card key={user.user_id} className="bg-muted/50">
                   <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold">{user.username || 'Unnamed User'}</h3>
-                    <p className="text-muted-foreground">{user.bio || 'No bio provided.'}</p>
+                    <h3 className="text-lg font-semibold">
+                      {user.username || "Unnamed User"}
+                    </h3>
                   </CardContent>
                 </Card>
               ))}
