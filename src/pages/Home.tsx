@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import {
@@ -132,7 +131,7 @@ const technologies = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted text-foreground dark:from-background dark:to-muted dark:text-foreground transition-colors duration-300">
+    <div className="min-h-screen min-w-screen bg-gradient-to-b from-background to-muted text-foreground dark:from-background dark:to-muted dark:text-foreground transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative dark:bg-neutral-900 bg-neutral-100 px-20 py-24 md:py-32 mx-auto flex flex-col md:flex-row items-center justify-between gap-12 ">
         {/* Left Text Content */}
@@ -160,12 +159,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.4 }}
           >
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-lg"
-            >
-              <SignInButton />
-            </Button>
+            <SignInButton />
           </motion.div>
         </div>
 

@@ -1,20 +1,23 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
-import useCreateClerkSupabaseClient from "./useCreateClerkSupabaseClient";
 import type { Database } from "@/types/db";
 import type { PostType } from "@/types/types";
+import { supabase } from "@/lib/supabase";
+import userStore from "@/store/userStore";
 
 const fetchPosts = async (
   supabase: SupabaseClient<Database>
 ): Promise<PostType[] | null> => {
   // Fetch current followings
+  const currentUser = userStore((state: any) => state.currentUser);
   const { data: currentFollowings, error: followingsError } = await supabase
     .from("users")
-    .select("followings");
+    .select("followings")
+    .eq("user_id", currentUser?.user_id);
 
   if (followingsError) {
     console.error("Error fetching followings:", followingsError);
-    return null;
+    return [];
   }
 
   if (!currentFollowings || currentFollowings.length === 0) {
@@ -49,7 +52,6 @@ const fetchPosts = async (
 };
 
 export default function useFetchPosts() {
-  const supabase = useCreateClerkSupabaseClient();
   const query = useQuery({
     queryKey: ["posts"],
     queryFn: () => fetchPosts(supabase),

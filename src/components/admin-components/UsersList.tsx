@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import type { User } from "@/types/types";
-import useCreateClerkSupabaseClient from "@/hooks/useCreateClerkSupabaseClient";
+import { supabase } from "@/lib/supabase";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const USERS_PER_PAGE = 10;
 
 const fetchUsers = async (page: number): Promise<User[]> => {
   const from = page * USERS_PER_PAGE;
   const to = from + USERS_PER_PAGE - 1;
-  const supabase = useCreateClerkSupabaseClient();
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -55,10 +55,27 @@ const UserList = () => {
             <div className="space-y-4">
               {users.map((user) => (
                 <Card key={user.user_id} className="bg-muted/50">
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold">
-                      {user.username || "Unnamed User"}
-                    </h3>
+                  <CardContent className="flex items-centers gap-6 ">
+                    {user.image && (
+                      <Avatar>
+                        <AvatarImage src={user.image} />
+                        <AvatarFallback>
+                          {user.fullname?.charAt(0)?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div>
+                      <div className="text-lg font-semibold">
+                        {user.fullname}
+                      </div>
+                      <div className="text-muted-foreground">
+                        {user.username}{" "}
+                      </div>
+                    </div>
+                    <div>{user.email}</div>
+                    <div className="ml-auto">
+                      <Button variant="destructive">Block</Button>
+                    </div>
                   </CardContent>
                 </Card>
               ))}

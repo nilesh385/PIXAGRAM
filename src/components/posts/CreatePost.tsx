@@ -18,24 +18,22 @@ import {
 } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type Post, postSchema } from "@/types/types";
+import { type PostSchemaType, postSchema } from "@/types/types";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import useCreateClerkSupabaseClient from "@/hooks/useCreateClerkSupabaseClient";
+import { supabase } from "@/lib/supabase";
 
 export default function CreatePost() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const supabase = useCreateClerkSupabaseClient();
-
   const navigate = useNavigate();
   const { user } = useUser();
 
-  const form = useForm<Post>({
+  const form = useForm<PostSchemaType>({
     resolver: zodResolver(postSchema),
     defaultValues: {
       title: "",
@@ -61,7 +59,7 @@ export default function CreatePost() {
     setImage(null);
     setImagePreview(null);
   };
-  const handleCreatePost = async (values: Post) => {
+  const handleCreatePost = async (values: PostSchemaType) => {
     if (!supabase) return toast.error("Database error...");
     if (!values.title) return toast.error("Title is required...");
     try {

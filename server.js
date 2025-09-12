@@ -86,6 +86,7 @@ app.post(
           fullname: evt.data.first_name + " " + evt.data.last_name,
           email: evt.data.email_addresses[0].email_address,
           image: evt.data.image_url,
+          role: "user",
         });
       if (createProfileError) {
         console.log(

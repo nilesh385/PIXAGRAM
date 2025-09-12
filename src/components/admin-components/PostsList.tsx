@@ -13,16 +13,15 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, Heart } from "lucide-react";
-import useCreateClerkSupabaseClient from "@/hooks/useCreateClerkSupabaseClient";
 import { useUser } from "@clerk/clerk-react";
 import type { CommentType, PostType } from "@/types/types";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
+import { supabase } from "@/lib/supabase";
 
 const POSTS_PER_PAGE = 10;
 
 const fetchPosts = async (page: number): Promise<PostType[]> => {
-  const supabase = useCreateClerkSupabaseClient();
   const from = page * POSTS_PER_PAGE;
   const to = from + POSTS_PER_PAGE - 1;
 
@@ -37,8 +36,6 @@ const fetchPosts = async (page: number): Promise<PostType[]> => {
 };
 
 const fetchCommentsByPost = async (postId: string): Promise<CommentType[]> => {
-  const supabase = useCreateClerkSupabaseClient();
-
   const { data, error } = await supabase
     .from("comments")
     .select("*")
@@ -54,7 +51,6 @@ const AllPostsWithComments = () => {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [newComment, setNewComment] = useState("");
   const queryClient = useQueryClient();
-  const supabase = useCreateClerkSupabaseClient();
 
   const currentUser = useUser(); // Make sure session exists
 

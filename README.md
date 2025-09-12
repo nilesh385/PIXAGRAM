@@ -49,6 +49,10 @@ This project is built with:
 - View other users’ profiles
 - Edit and update own profile
 
+### 🔍 Search
+
+- Search users by username and fullname
+
 ### 🖼️ Post Creation
 
 - Upload image posts (optionally videos)
@@ -68,18 +72,23 @@ This project is built with:
 - View followers and following lists
 - Main feed shows posts from followed users
 
----
-
-## 🔧 Secondary Features
-
 ### 💬 Comments
 
 - Add and view comments on posts
 - Optional: Like/unlike comments
 
+### Admin Panel
+
+- Admin can view all the users and posts
+- Admin can block users
+- Admin can delete posts
+
+---
+
+## 🔧 Secondary Features
+
 ### 🔍 Search
 
-- Search users by username
 - Optional: Search posts by hashtags
 
 ### 🔔 Notifications

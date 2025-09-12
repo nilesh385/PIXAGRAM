@@ -1,10 +1,18 @@
 import type { User } from "@/types/types";
 import { create } from "zustand";
 
-const userStore = create((set) => ({
+interface UserState {
+  currentUser: User | null;
+  setCurrentUser: (user: User | null) => void;
+  refreshRelations: boolean;
+  toggleRefreshRelations: () => void;
+}
+
+const userStore = create<UserState>((set) => ({
   currentUser: null,
-  searchedUsers: [],
-  setCurrentUser: (user: User) => set({ currentUser: user }),
-  setSearchedUsers: (users: User[]) => set({ searchedUsers: users }),
+  setCurrentUser: (user: User | null) => set({ currentUser: user }),
+  refreshRelations: false,
+  toggleRefreshRelations: () =>
+    set((state) => ({ refreshRelations: !state.refreshRelations })),
 }));
 export default userStore;

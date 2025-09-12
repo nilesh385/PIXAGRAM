@@ -15,7 +15,7 @@ export default function Signup() {
         </Button>
       </SignedOut>
       <SignedIn>
-        <Button size={"icon"} className="p-0 rounded-full ">
+        <Button variant={"outline"} size={"icon"} className="p-0 rounded-full ">
           <UserButton />
         </Button>
       </SignedIn>
