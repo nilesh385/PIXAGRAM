@@ -19,7 +19,6 @@ export type Database = {
           content: string;
           created_at: string | null;
           id: string;
-          is_liked: boolean | null;
           post_id: string | null;
           user_id: string | null;
         };
@@ -27,7 +26,6 @@ export type Database = {
           content: string;
           created_at?: string | null;
           id?: string;
-          is_liked?: boolean | null;
           post_id?: string | null;
           user_id?: string | null;
         };
@@ -35,7 +33,6 @@ export type Database = {
           content?: string;
           created_at?: string | null;
           id?: string;
-          is_liked?: boolean | null;
           post_id?: string | null;
           user_id?: string | null;
         };
@@ -58,28 +55,28 @@ export type Database = {
       };
       posts: {
         Row: {
-          created_at: string;
-          description: string;
-          image: string;
           post_id: string;
-          title: string;
           user_id: string;
+          image: string | null;
+          title: string | null;
+          description: string | null;
+          created_at: string;
         };
         Insert: {
-          created_at?: string;
-          description: string;
-          image: string;
           post_id?: string;
-          title: string;
-          user_id?: string;
+          user_id: string;
+          image: string | null;
+          title?: string | null;
+          description?: string | null;
+          created_at?: string;
         };
         Update: {
-          created_at?: string;
-          description?: string;
-          image?: string;
           post_id?: string;
-          title?: string;
           user_id?: string;
+          image?: string;
+          title?: string | null;
+          description?: string | null;
+          created_at?: string;
         };
         Relationships: [
           {
@@ -130,7 +127,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      likes: {
+        Row: {
+          id: string;
+          post_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          post_id: string;
+          user_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          post_id?: string;
+          user_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "likes_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "posts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "likes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["user_id"];
+          }
+        ];
+      };
     };
+
     Views: {
       [_ in never]: never;
     };

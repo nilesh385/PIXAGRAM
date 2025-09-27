@@ -1,3 +1,4 @@
+// UserSearchBar.tsx
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
@@ -7,8 +8,9 @@ import { supabase } from "@/lib/supabase";
 import UserCard from "./UserCard";
 import userStore from "@/store/userStore";
 
-import type { SearchedUser, User } from "@/types/types";
+import type { SearchedUser } from "@/types/types";
 import { followUser, unfollowUser } from "@/lib/followFunctions";
+import { Loader2 } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
@@ -44,28 +46,81 @@ const UserSearchBar = () => {
       return data || [];
     },
     enabled: false,
+    staleTime: 600,
   });
 
-  // 🔹 Follow mutation
+  // 🔹 Optimistic follow mutation
   const followMutation = useMutation({
     mutationFn: (userId: string) => followUser(currentUser!.user_id, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onMutate: async (userId: string) => {
+      await queryClient.cancelQueries({
         queryKey: ["search-users", searchTerm, page],
       });
+
+      const prevUsers = queryClient.getQueryData<SearchedUser[]>([
+        "search-users",
+        searchTerm,
+        page,
+      ]);
+
+      queryClient.setQueryData<SearchedUser[]>(
+        ["search-users", searchTerm, page],
+        (old = []) =>
+          old.map((u) =>
+            u.user_id === userId ? { ...u, isFollowing: true } : u
+          )
+      );
+
+      return { prevUsers };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.prevUsers) {
+        queryClient.setQueryData(
+          ["search-users", searchTerm, page],
+          context.prevUsers
+        );
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["followers-following", currentUser?.user_id],
       });
     },
   });
 
-  // 🔹 Unfollow mutation
+  // 🔹 Optimistic unfollow mutation
   const unfollowMutation = useMutation({
     mutationFn: (userId: string) => unfollowUser(currentUser!.user_id, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onMutate: async (userId: string) => {
+      await queryClient.cancelQueries({
         queryKey: ["search-users", searchTerm, page],
       });
+
+      const prevUsers = queryClient.getQueryData<SearchedUser[]>([
+        "search-users",
+        searchTerm,
+        page,
+      ]);
+
+      queryClient.setQueryData<SearchedUser[]>(
+        ["search-users", searchTerm, page],
+        (old = []) =>
+          old.map((u) =>
+            u.user_id === userId ? { ...u, isFollowing: false } : u
+          )
+      );
+
+      return { prevUsers };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.prevUsers) {
+        queryClient.setQueryData(
+          ["search-users", searchTerm, page],
+          context.prevUsers
+        );
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["followers-following", currentUser?.user_id],
       });
@@ -81,21 +136,13 @@ const UserSearchBar = () => {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "users" },
-        (payload) => {
-          const newUser = payload.new as User | null; // 👈 Explicit cast
-
-          if (
-            newUser &&
-            (newUser.user_id === currentUser.user_id ||
-              users.some((u) => u.user_id === newUser.user_id))
-          ) {
-            queryClient.invalidateQueries({
-              queryKey: ["search-users", searchTerm, page],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ["followers-following", currentUser.user_id],
-            });
-          }
+        () => {
+          queryClient.invalidateQueries({
+            queryKey: ["search-users", searchTerm, page],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["followers-following", currentUser.user_id],
+          });
         }
       )
       .subscribe();
@@ -103,10 +150,10 @@ const UserSearchBar = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentUser?.user_id, queryClient, searchTerm, page, users]);
+  }, [currentUser?.user_id, queryClient, searchTerm, page]);
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
+    <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto mt-5">
       {/* Search Input */}
       <div className="flex gap-2">
         <Input
@@ -118,7 +165,7 @@ const UserSearchBar = () => {
           }}
         />
         <Button onClick={() => refetch()} disabled={isFetching}>
-          {isFetching ? "Searching..." : "Search"}
+          {isFetching ? <Loader2 className="animate-spin size-4" /> : "Search"}
         </Button>
       </div>
 
@@ -132,9 +179,9 @@ const UserSearchBar = () => {
             <UserCard
               key={user.user_id}
               user={user}
-              isFollowing={
-                currentUser?.followings?.includes(user.user_id) ?? false
-              }
+              isInitiallyFollowing={currentUser?.followings?.includes(
+                user.user_id
+              )} // ✅ Zustand truth
               followMutation={{
                 mutate: () => followMutation.mutate(user.user_id),
                 isPending: followMutation.isPending,

@@ -21,17 +21,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type PostSchemaType, postSchema } from "@/types/types";
 import { Input } from "../ui/input";
 import { useState } from "react";
-import { useUser } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
+import userStore, { type UserState } from "@/store/userStore";
 
 export default function CreatePost() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useUser();
+  const user = userStore((state: UserState) => state.currentUser);
 
   const form = useForm<PostSchemaType>({
     resolver: zodResolver(postSchema),
@@ -67,7 +67,9 @@ export default function CreatePost() {
       let image_url = "";
       if (image) {
         const fileExt = image.name.split(".").pop();
-        const filePath = `users/${user?.id}/${crypto.randomUUID()}.${fileExt}`;
+        const filePath = `users/${
+          user?.user_id
+        }/${crypto.randomUUID()}.${fileExt}`;
         const { error: uploadError } = await supabase?.storage
           .from("images")
           .upload(filePath, image);
@@ -83,10 +85,10 @@ export default function CreatePost() {
         image_url = publicUrl.publicUrl;
       }
       const { error: postError } = await supabase.from("posts").insert({
-        user_id: user?.id,
         title: values.title,
         description: values?.description,
         image: image_url || null,
+        user_id: user?.user_id!,
       });
       if (postError) {
         await supabase.storage.from("images").remove([image_url]);
@@ -97,7 +99,7 @@ export default function CreatePost() {
       setImagePreview(null);
 
       toast.success("Post created successfully");
-      navigate("/ownPosts");
+      navigate("/myPosts");
     } catch (error: any) {
       toast.error(error.message);
       console.log(error);

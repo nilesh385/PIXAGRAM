@@ -1,31 +1,37 @@
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import userStore from "@/store/userStore";
+import { useFollowUser } from "@/hooks/useFollowUser";
+import { useUnfollowUser } from "@/hooks/useUnfollowUser";
 
 interface RelationUser {
   user_id: string;
   username: string;
   fullname: string;
-  image: string;
+  image: string | null;
 }
 
 export default function FollowersFollowingPage() {
-  const { currentUser, toggleRefreshRelations } = userStore();
+  const { currentUser } = userStore();
   const queryClient = useQueryClient();
 
   const [searchFollowers, setSearchFollowers] = useState("");
   const [searchFollowing, setSearchFollowing] = useState("");
 
+  // ✅ Use hooks instead of writing follow/unfollow mutations here
+  const followUser = useFollowUser(currentUser?.user_id || "");
+  const unfollowUser = useUnfollowUser(currentUser?.user_id || "");
+
   const fetchRelations = async (): Promise<{
     followers: RelationUser[];
-    following: RelationUser[];
+    followings: RelationUser[];
   }> => {
-    if (!currentUser) return { followers: [], following: [] };
+    if (!currentUser) return { followers: [], followings: [] };
 
     const { data: followersData } = await supabase
       .from("users")
@@ -35,11 +41,11 @@ export default function FollowersFollowingPage() {
     const { data: followingData } = await supabase
       .from("users")
       .select("user_id, username, fullname, image")
-      .in("user_id", currentUser.following || []);
+      .in("user_id", currentUser.followings || []);
 
     return {
       followers: followersData || [],
-      following: followingData || [],
+      followings: followingData || [],
     };
   };
 
@@ -49,48 +55,7 @@ export default function FollowersFollowingPage() {
     enabled: !!currentUser,
   });
 
-  const followUser = useMutation({
-    mutationFn: async (targetUserId: string) => {
-      if (!currentUser) return;
-
-      const updatedFollowing = [...(currentUser.following || []), targetUserId];
-      const { error } = await supabase
-        .from("users")
-        .update({ following: updatedFollowing })
-        .eq("user_id", currentUser.user_id);
-
-      if (error) throw new Error(error.message);
-    },
-    onSuccess: () => {
-      toggleRefreshRelations();
-      queryClient.invalidateQueries({
-        queryKey: ["followers-following", currentUser?.user_id],
-      });
-    },
-  });
-
-  const unfollowUser = useMutation({
-    mutationFn: async (targetUserId: string) => {
-      if (!currentUser) return;
-
-      const updatedFollowing =
-        currentUser.following?.filter((id) => id !== targetUserId) || [];
-      const { error } = await supabase
-        .from("users")
-        .update({ following: updatedFollowing })
-        .eq("user_id", currentUser.user_id);
-
-      if (error) throw new Error(error.message);
-    },
-    onSuccess: () => {
-      toggleRefreshRelations();
-      queryClient.invalidateQueries({
-        queryKey: ["followers-following", currentUser?.user_id],
-      });
-    },
-  });
-
-  // --- REALTIME SUBSCRIPTION ---
+  // --- Realtime Sub ---
   useEffect(() => {
     if (!currentUser?.user_id) return;
 
@@ -98,11 +63,7 @@ export default function FollowersFollowingPage() {
       .channel("realtime-followers")
       .on(
         "postgres_changes",
-        {
-          event: "*", // can also be "INSERT" | "UPDATE" | "DELETE"
-          schema: "public",
-          table: "users",
-        },
+        { event: "*", schema: "public", table: "users" },
         (payload) => {
           const newRow = payload.new as { user_id: string };
           if (newRow?.user_id === currentUser.user_id) {
@@ -129,7 +90,7 @@ export default function FollowersFollowingPage() {
     ) || [];
 
   const filteredFollowing =
-    data?.following.filter(
+    data?.followings.filter(
       (user) =>
         user.username.toLowerCase().includes(searchFollowing.toLowerCase()) ||
         user.fullname.toLowerCase().includes(searchFollowing.toLowerCase())
@@ -175,20 +136,22 @@ export default function FollowersFollowingPage() {
                         </p>
                       </div>
                     </div>
-                    {!currentUser?.following.includes(user.user_id) ? (
+                    {!currentUser?.followings?.includes(user.user_id) ? (
                       <Button
                         size="sm"
                         onClick={() => followUser.mutate(user.user_id)}
+                        disabled={followUser.isPending}
                       >
-                        Follow Back
+                        {followUser.isPending ? "Following..." : "Follow Back"}
                       </Button>
                     ) : (
                       <Button
                         size="sm"
                         variant="secondary"
                         onClick={() => unfollowUser.mutate(user.user_id)}
+                        disabled={unfollowUser.isPending}
                       >
-                        Unfollow
+                        {unfollowUser.isPending ? "Unfollowing..." : "Unfollow"}
                       </Button>
                     )}
                   </li>
@@ -237,8 +200,9 @@ export default function FollowersFollowingPage() {
                       size="sm"
                       variant="secondary"
                       onClick={() => unfollowUser.mutate(user.user_id)}
+                      disabled={unfollowUser.isPending}
                     >
-                      Unfollow
+                      {unfollowUser.isPending ? "Unfollowing..." : "Unfollow"}
                     </Button>
                   </li>
                 ))}

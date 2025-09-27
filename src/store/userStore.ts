@@ -1,7 +1,7 @@
 import type { User } from "@/types/types";
 import { create } from "zustand";
 
-interface UserState {
+export interface UserState {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
   refreshRelations: boolean;

@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 interface UserCardProps {
   user: User | SearchedUser;
-  isFollowing?: boolean;
+  isInitiallyFollowing?: boolean;
   followMutation?: {
     mutate: () => void;
     isPending: boolean;
@@ -18,17 +18,17 @@ interface UserCardProps {
 
 export default function UserCard({
   user,
-  isFollowing,
+  isInitiallyFollowing = false,
   followMutation,
   unfollowMutation,
 }: UserCardProps) {
   return (
-    <Card className="w-full ">
-      <CardContent className="flex items-center justify-between">
+    <Card className="w-full">
+      <CardContent className="flex items-center justify-between py-4">
         {/* Left Section */}
         <div className="flex items-center gap-4">
           <img
-            src={user.image!}
+            src={user.image || "/default-avatar.png"}
             alt={user.username}
             className="w-12 h-12 rounded-full object-cover border border-gray-300"
           />
@@ -42,28 +42,26 @@ export default function UserCard({
         <div>
           {followMutation &&
             unfollowMutation &&
-            (isFollowing ? (
+            (isInitiallyFollowing ? (
               <Button
                 variant="secondary"
                 onClick={() => unfollowMutation.mutate()}
                 disabled={unfollowMutation.isPending}
               >
-                {unfollowMutation.isPending ? (
+                {unfollowMutation.isPending && (
                   <Loader2 className="animate-spin h-5 w-5" />
-                ) : (
-                  "Unfollow"
                 )}
+                {" Unfollow"}
               </Button>
             ) : (
               <Button
                 onClick={() => followMutation.mutate()}
                 disabled={followMutation.isPending}
               >
-                {followMutation.isPending ? (
+                {followMutation.isPending && (
                   <Loader2 className="animate-spin h-5 w-5" />
-                ) : (
-                  "Follow"
                 )}
+                {" Follow"}
               </Button>
             ))}
         </div>
