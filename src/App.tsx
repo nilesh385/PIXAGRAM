@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import LoggedInHome from "./pages/LoggedInHome";
 import Home from "./pages/Home";
-import CreatePost from "./components/posts/CreatePost";
 import Header from "./components/Header";
 import { useEffect, useState } from "react";
 import type { User } from "./types/types";
@@ -13,6 +12,7 @@ import userStore from "./store/userStore";
 import UserSearchBar from "./components/search/UserSearchBar";
 import FollowersFollowingPage from "./pages/FollowersFollowingPage";
 import { MyPostsPage } from "./pages/MyPostsPage";
+import CreatePost from "./components/posts/CreatePost";
 
 export default function App() {
   const { isSignedIn, userId } = useAuth();

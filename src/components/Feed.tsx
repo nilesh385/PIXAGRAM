@@ -4,6 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
 import PostCard from "./posts/PostCard";
 import PostSkeleton from "./posts/PostSkeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Feed() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
@@ -17,42 +18,50 @@ export default function Feed() {
 
   if (status === "pending") {
     return (
-      <div className="flex flex-col gap-6">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <PostSkeleton key={i} />
-        ))}
-      </div>
+      <ScrollArea className="h-[80vh] rounded-md border p-4">
+        <div className="flex flex-col gap-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <PostSkeleton key={i} />
+          ))}
+        </div>
+      </ScrollArea>
     );
   }
 
   if (status === "error") {
-    return <p className="text-center text-red-500">Failed to load feed</p>;
+    return (
+      <ScrollArea className="h-[80vh] rounded-md border p-4">
+        <p className="text-center text-red-500">Failed to load feed</p>
+      </ScrollArea>
+    );
   }
 
   const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   return (
-    <div className="flex flex-col gap-6">
-      {posts.length === 0 ? (
-        <p className="text-center text-muted-foreground">
-          Follow some users to see their posts here.
-        </p>
-      ) : (
-        posts.map((post, idx) => (
-          <div
-            key={post.post_id}
-            ref={idx === posts.length - 1 ? ref : undefined}
-          >
-            <PostCard post={post} />
-          </div>
-        ))
-      )}
+    <ScrollArea className="h-[80vh] rounded-md border p-4">
+      <div className="flex flex-col gap-6">
+        {posts.length === 0 ? (
+          <p className="text-center text-muted-foreground">
+            Follow some users to see their posts here.
+          </p>
+        ) : (
+          posts.map((post, idx) => (
+            <div
+              key={post.post_id}
+              ref={idx === posts.length - 1 ? ref : undefined}
+            >
+              <PostCard post={post} />
+            </div>
+          ))
+        )}
 
-      {isFetchingNextPage && (
-        <div className="flex justify-center items-center p-4">
-          <Loader2 className="animate-spin size-5 text-muted-foreground" />
-        </div>
-      )}
-    </div>
+        {isFetchingNextPage && (
+          <div className="flex justify-center items-center p-4">
+            <Loader2 className="animate-spin size-5 text-muted-foreground" />
+          </div>
+        )}
+      </div>
+    </ScrollArea>
   );
 }

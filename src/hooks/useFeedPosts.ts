@@ -6,13 +6,16 @@ import userStore from "@/store/userStore";
 const PAGE_SIZE = 5;
 export type FeedPost = {
   post_id: string;
-  user_id: string;
-  content: string;
+  title: string;
+  description: string | null;
+  image: string | null;
   created_at: string;
+  user_id: string;
   username: string;
+  fullname: string | null;
+  user_image: string | null;
   likes_count: number;
   comments_count: number;
-  is_liked: boolean;
 };
 
 export function useFeedPosts() {

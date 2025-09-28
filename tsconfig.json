@@ -6,6 +6,8 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "jsx": "react-jsx", // ✅ modern JSX transform
+    "types": ["react", "react-dom"],
     "paths": {
       "@/*": ["./src/*"]
     }

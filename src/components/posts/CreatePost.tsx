@@ -86,7 +86,7 @@ export default function CreatePost() {
       }
       const { error: postError } = await supabase.from("posts").insert({
         title: values.title,
-        description: values?.description,
+        description: values.description,
         image: image_url || null,
         user_id: user?.user_id!,
       });

@@ -22,12 +22,13 @@ export function useAddComment(postId: string) {
       if (error) throw error;
       return data;
     },
-    onMutate: async (content: string) => {
-      // Optimistic update
-      await queryClient.cancelQueries({ queryKey: ["comments", postId] });
 
+    onMutate: async (content: string) => {
+      // Cancel ongoing queries
+      await queryClient.cancelQueries({ queryKey: ["comments", postId] });
       const prevData = queryClient.getQueryData(["comments", postId]);
 
+      // Optimistic update for comments list
       queryClient.setQueryData(["comments", postId], (old: any) => {
         if (!old) return old;
         return {
@@ -56,15 +57,34 @@ export function useAddComment(postId: string) {
         };
       });
 
+      // ✅ Optimistically bump comment count in feed
+      queryClient.setQueryData(["feed"], (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            posts: page.posts.map((p: any) =>
+              p.post_id === postId
+                ? { ...p, comments_count: (p.comments_count ?? 0) + 1 }
+                : p
+            ),
+          })),
+        };
+      });
+
       return { prevData };
     },
+
     onError: (_err, _vars, ctx) => {
       if (ctx?.prevData) {
         queryClient.setQueryData(["comments", postId], ctx.prevData);
       }
     },
+
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
     },
   });
 }
