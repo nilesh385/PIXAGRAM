@@ -30,7 +30,7 @@ export default function Feed() {
 
   if (status === "error") {
     return (
-      <ScrollArea className="h-[80vh] rounded-md border p-4">
+      <ScrollArea className="h-[85vh] rounded-md border p-4">
         <p className="text-center text-red-500">Failed to load feed</p>
       </ScrollArea>
     );
@@ -39,7 +39,7 @@ export default function Feed() {
   const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   return (
-    <ScrollArea className="h-[80vh] rounded-md border p-4">
+    <ScrollArea className="h-[85vh] rounded-md border p-4">
       <div className="flex flex-col gap-6">
         {posts.length === 0 ? (
           <p className="text-center text-muted-foreground">

@@ -13,7 +13,7 @@ import { Home, Users, FileText } from "lucide-react";
 
 export default function AdminSidebar() {
   return (
-    <Sidebar className="w-64 border-r h-[calc(100vh-64px)]">
+    <Sidebar className="w-64 border-r border-t h-[calc(100vh-80px)] mt-auto">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -21,8 +21,7 @@ export default function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link to="/">
-                    {" "}
-                    <Home className="h-4 w-4" /> Dashboard{" "}
+                    <Home className="h-4 w-4" /> Dashboard
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -30,8 +29,7 @@ export default function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link to="/admin/users">
-                    {" "}
-                    <Users className="h-4 w-4" /> Users{" "}
+                    <Users className="h-4 w-4" /> Users
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -39,8 +37,7 @@ export default function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link to="/admin/posts">
-                    {" "}
-                    <FileText className="h-4 w-4" /> Posts{" "}
+                    <FileText className="h-4 w-4" /> Posts
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

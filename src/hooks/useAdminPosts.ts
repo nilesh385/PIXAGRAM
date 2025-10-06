@@ -13,7 +13,7 @@ export function useAdminPosts(page: number) {
 
       const { data, error } = await supabase
         .from("posts")
-        .select("*, users(username, fullname)")
+        .select("*, users(username, fullname,image)")
         .order("created_at", { ascending: false })
         .range(from, to);
 

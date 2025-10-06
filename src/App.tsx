@@ -14,12 +14,14 @@ import { MyPostsPage } from "./pages/MyPostsPage";
 import AdminHome from "./pages/admin/DashboardPage";
 import AdminPosts from "./pages/admin/AdminPostsPage";
 import AdminUsers from "./pages/admin/AdminUserPage";
+import { useNetworkStatus } from "./hooks/useNetworkStatus";
 
 export default function App() {
   const { isSignedIn, userId } = useAuth();
   const [userData, setUserData] = useState<User | any>();
   const setCurrentUser = userStore((state: any) => state.setCurrentUser);
 
+  useNetworkStatus();
   useEffect(() => {
     const fetchUserData = async () => {
       const { data, error } = await supabase
@@ -40,9 +42,13 @@ export default function App() {
   }, [isSignedIn, userId]);
   if (userData?.is_blocked) {
     return (
-      <div className="h-full w-full text-center">
-        You have been blocked by the admin. Please contact the admin for more
-        details.
+      <div className="w-full h-full">
+        <Header />
+        <div className="h-full w-full mt-5 text-center">
+          <h1 className="text-2xl font-bold">Access Denied</h1>
+          You have been blocked by the admin. Please contact the admin for more
+          details.
+        </div>
       </div>
     );
   }

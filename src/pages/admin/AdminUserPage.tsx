@@ -46,42 +46,47 @@ export default function AdminUsers() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.user_id}>
-                <TableCell>{user.username}</TableCell>
-                <TableCell>{user.fullname}</TableCell>
-                <TableCell>{user.is_blocked ? "Blocked" : "Active"}</TableCell>
-                <TableCell>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="destructive" size="sm">
-                        {user.is_blocked ? "Unblock" : "Block"}
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          {user.is_blocked ? "Unblock User?" : "Block User?"}
-                        </AlertDialogTitle>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() =>
-                            toggleBlock({
-                              userId: user.user_id,
-                              isBlocked: user.is_blocked,
-                            })
-                          }
-                        >
-                          Confirm
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </TableCell>
-              </TableRow>
-            ))}
+            {users.map((user) => {
+              if (user.role === "admin") return;
+              return (
+                <TableRow key={user.user_id}>
+                  <TableCell>{user.username}</TableCell>
+                  <TableCell>{user.fullname}</TableCell>
+                  <TableCell>
+                    {user.is_blocked ? "Blocked" : "Active"}
+                  </TableCell>
+                  <TableCell>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm">
+                          {user.is_blocked ? "Unblock" : "Block"}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            {user.is_blocked ? "Unblock User?" : "Block User?"}
+                          </AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() =>
+                              toggleBlock({
+                                userId: user.user_id,
+                                isBlocked: user.is_blocked,
+                              })
+                            }
+                          >
+                            Confirm
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
 
