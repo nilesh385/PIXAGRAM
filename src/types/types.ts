@@ -22,12 +22,12 @@ export interface User {
   username: string;
   fullname: string;
   email: string;
-  image: string;
-  followings: string[];
-  followers: string[];
-  role: string;
-  is_blocked: boolean;
-  created_at: string;
+  image: string | null;
+  followings: string[] | null;
+  followers: string[] | null;
+  role: string | null;
+  is_blocked: boolean | null;
+  created_at: string | null;
 }
 
 export interface Post {

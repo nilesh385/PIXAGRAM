@@ -1,18 +1,19 @@
 import { Route, Routes } from "react-router-dom";
 import LoggedInHome from "./pages/LoggedInHome";
 import Home from "./pages/Home";
+import CreatePost from "./components/posts/CreatePost";
 import Header from "./components/Header";
 import { useEffect, useState } from "react";
 import type { User } from "./types/types";
-import AdminDashboard from "./pages/AdminDashboard";
 import { supabase } from "./lib/supabase";
 import { useAuth } from "@clerk/clerk-react";
-// import SearchInput from "./components/search/SearchInput";
 import userStore from "./store/userStore";
 import UserSearchBar from "./components/search/UserSearchBar";
 import FollowersFollowingPage from "./pages/FollowersFollowingPage";
 import { MyPostsPage } from "./pages/MyPostsPage";
-import CreatePost from "./components/posts/CreatePost";
+import AdminHome from "./pages/admin/DashboardPage";
+import AdminPosts from "./pages/admin/AdminPostsPage";
+import AdminUsers from "./pages/admin/AdminUserPage";
 
 export default function App() {
   const { isSignedIn, userId } = useAuth();
@@ -37,69 +38,64 @@ export default function App() {
       fetchUserData();
     }
   }, [isSignedIn, userId]);
+  if (userData?.is_blocked) {
+    return (
+      <div className="h-full w-full text-center">
+        You have been blocked by the admin. Please contact the admin for more
+        details.
+      </div>
+    );
+  }
 
   return (
     <div>
-      {userData?.is_blocked ? (
-        <div className="h-full w-full text-center">
-          You have been blocked by the admin. Please contact the admin for more
-          details.
-        </div>
-      ) : (
-        <>
-          <Header />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                isSignedIn ? (
-                  userData?.role === "admin" ? (
-                    <AdminDashboard />
-                  ) : (
-                    <LoggedInHome />
-                  )
+      <>
+        <Header />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              isSignedIn ? (
+                userData?.role === "admin" ? (
+                  <AdminHome />
                 ) : (
-                  <Home />
+                  <LoggedInHome />
                 )
-              }
-            />
+              ) : (
+                <Home />
+              )
+            }
+          />
 
-            <Route
-              path="/admin/users"
-              element={
-                isSignedIn && userData?.role === "admin" && <AdminDashboard />
-              }
-            />
-            <Route
-              path="/admin/posts"
-              element={
-                isSignedIn && userData?.role === "admin" && <AdminDashboard />
-              }
-            />
-            <Route
-              path="/search"
-              element={
-                isSignedIn && userData?.role === "user" && <UserSearchBar />
-              }
-            />
-            <Route
-              path="/followersAndFollowing"
-              element={
-                isSignedIn &&
-                userData?.role === "user" && <FollowersFollowingPage />
-              }
-            />
-            <Route
-              path="/myPosts"
-              element={
-                isSignedIn && userData?.role === "user" && <MyPostsPage />
-              }
-            />
-          </Routes>
+          <Route
+            path="/admin/users"
+            element={isSignedIn && userData?.role === "admin" && <AdminUsers />}
+          />
+          <Route
+            path="/admin/posts"
+            element={isSignedIn && userData?.role === "admin" && <AdminPosts />}
+          />
+          <Route
+            path="/search"
+            element={
+              isSignedIn && userData?.role === "user" && <UserSearchBar />
+            }
+          />
+          <Route
+            path="/followersAndFollowing"
+            element={
+              isSignedIn &&
+              userData?.role === "user" && <FollowersFollowingPage />
+            }
+          />
+          <Route
+            path="/myPosts"
+            element={isSignedIn && userData?.role === "user" && <MyPostsPage />}
+          />
+        </Routes>
 
-          {isSignedIn && userData?.role === "user" && <CreatePost />}
-        </>
-      )}
+        {isSignedIn && userData?.role === "user" && <CreatePost />}
+      </>
     </div>
   );
 }

@@ -133,12 +133,18 @@ export const MyPostsPage: React.FC = () => {
                 </AlertDialogContent>
               </AlertDialog>
 
-              {post.image && (
+              {post.image ? (
                 <img
                   src={post.image}
                   alt={"Couldn't load the image"}
                   className="w-full h-48 object-cover"
                 />
+              ) : (
+                <div className="w-11/12 mx-auto rounded-2xl h-48 flex items-center justify-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                  <span className="text-3xl font-bold">
+                    {post.title && "📝 No Image"}
+                  </span>
+                </div>
               )}
 
               <CardHeader>
@@ -146,7 +152,7 @@ export const MyPostsPage: React.FC = () => {
               </CardHeader>
 
               <CardContent>
-                <p className="text-sm text-gray-700 line-clamp-2">
+                <p className="text-sm text-gray-400 line-clamp-2">
                   {post.description}
                 </p>
                 <p className="text-xs text-gray-400 mt-3">

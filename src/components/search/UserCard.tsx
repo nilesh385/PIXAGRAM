@@ -33,7 +33,9 @@ export default function UserCard({
             className="w-12 h-12 rounded-full object-cover border border-gray-300"
           />
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-200">{user.fullname}</span>
+            <span className="font-semibold dark:text-gray-200">
+              {user.fullname}
+            </span>
             <span className="text-sm text-gray-500">@{user.username}</span>
           </div>
         </div>

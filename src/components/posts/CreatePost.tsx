@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import userStore, { type UserState } from "@/store/userStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CreatePost() {
   const [image, setImage] = useState<File | null>(null);
@@ -32,6 +33,7 @@ export default function CreatePost() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const user = userStore((state: UserState) => state.currentUser);
+  const queryClient = useQueryClient();
 
   const form = useForm<PostSchemaType>({
     resolver: zodResolver(postSchema),
@@ -95,6 +97,9 @@ export default function CreatePost() {
         toast.error(postError.message);
         return;
       }
+      // ✅ Invalidate feed-posts query so feed refreshes immediately
+      queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
+
       setImage(null);
       setImagePreview(null);
 

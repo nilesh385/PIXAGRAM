@@ -34,15 +34,17 @@ export default function PostCard({ post }: { post: FeedPost }) {
       </CardHeader>
 
       {/* Image */}
-      <img
-        src={post.image!}
-        alt={post.title}
-        className="w-full max-h-[500px] object-cover"
-      />
+      {post.image && (
+        <img
+          src={post.image!}
+          alt={post.title}
+          className="w-full max-h-[500px] object-cover"
+        />
+      )}
 
       {/* Content */}
       <CardContent className="p-4 space-y-3">
-        {post.title && <h3 className="font-semibold">{post.title}</h3>}
+        {post.title && <h2 className="font-semibold">{post.title}</h2>}
         {post.description && (
           <p className="text-sm text-muted-foreground">{post.description}</p>
         )}
