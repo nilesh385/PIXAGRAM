@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import userStore, { type UserState } from "@/store/userStore";
 import { useQueryClient } from "@tanstack/react-query";
+import { Textarea } from "../ui/textarea";
 
 export default function CreatePost() {
   const [image, setImage] = useState<File | null>(null);
@@ -144,6 +145,7 @@ export default function CreatePost() {
                       <Input
                         placeholder="Title..."
                         id="title"
+                        maxLength={100}
                         {...field}
                         required
                       />
@@ -159,9 +161,10 @@ export default function CreatePost() {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input
+                      <Textarea
                         placeholder="Description..."
                         id="description"
+                        maxLength={500}
                         {...field}
                       />
                     </FormControl>

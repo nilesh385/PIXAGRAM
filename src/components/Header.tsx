@@ -21,68 +21,66 @@ export default function Header() {
         </Link>
       </div>
       <div className="flex gap-4">
-        {isSignedIn &&
-          currentUser?.role === "user" &&
-          currentUser.is_blocked === "false" && (
-            <div className="flex gap-4">
-              <TooltipWrapper content="Home" side="top" align="center">
-                <Button
-                  variant={location.pathname === "/" ? "default" : "outline"}
-                  size={"icon"}
-                  className="cursor-pointer"
-                >
-                  <Link to={"/"}>
-                    <HomeIcon />
-                  </Link>
-                </Button>
-              </TooltipWrapper>
-              <TooltipWrapper content="Search" side="top" align="center">
-                <Button
-                  variant={
-                    location.pathname === "/search" ? "default" : "outline"
-                  }
-                  size={"icon"}
-                  className="cursor-pointer"
-                >
-                  <Link to={"/search"}>
-                    <UserSearchIcon />
-                  </Link>
-                </Button>
-              </TooltipWrapper>
-              <TooltipWrapper
-                content="Followers & Following"
-                side="top"
-                align="center"
+        {isSignedIn && currentUser?.role === "user" && (
+          <div className="flex gap-4">
+            <TooltipWrapper content="Home" side="top" align="center">
+              <Button
+                variant={location.pathname === "/" ? "default" : "outline"}
+                size={"icon"}
+                className="cursor-pointer"
               >
-                <Button
-                  variant={
-                    location.pathname === "/followersAndFollowing"
-                      ? "default"
-                      : "outline"
-                  }
-                  size={"icon"}
-                  className="cursor-pointer"
-                >
-                  <Link to={"/followersAndFollowing"}>
-                    <RiUserFollowFill />
-                  </Link>
-                </Button>
-              </TooltipWrapper>
-              <TooltipWrapper content="My Posts" side="top" align="center">
-                <Button
-                  variant={
-                    location.pathname === "/myPosts" ? "default" : "outline"
-                  }
-                  size={"icon"}
-                  className="cursor-pointer"
-                >
-                  <Link to={"/myPosts"}>
-                    <TbUserScreen />
-                  </Link>
-                </Button>
-              </TooltipWrapper>
-            </div>
-          )}
+                <Link to={"/"}>
+                  <HomeIcon />
+                </Link>
+              </Button>
+            </TooltipWrapper>
+            <TooltipWrapper content="Search" side="top" align="center">
+              <Button
+                variant={
+                  location.pathname === "/search" ? "default" : "outline"
+                }
+                size={"icon"}
+                className="cursor-pointer"
+              >
+                <Link to={"/search"}>
+                  <UserSearchIcon />
+                </Link>
+              </Button>
+            </TooltipWrapper>
+            <TooltipWrapper
+              content="Followers & Following"
+              side="top"
+              align="center"
+            >
+              <Button
+                variant={
+                  location.pathname === "/followersAndFollowing"
+                    ? "default"
+                    : "outline"
+                }
+                size={"icon"}
+                className="cursor-pointer"
+              >
+                <Link to={"/followersAndFollowing"}>
+                  <RiUserFollowFill />
+                </Link>
+              </Button>
+            </TooltipWrapper>
+            <TooltipWrapper content="My Posts" side="top" align="center">
+              <Button
+                variant={
+                  location.pathname === "/myPosts" ? "default" : "outline"
+                }
+                size={"icon"}
+                className="cursor-pointer"
+              >
+                <Link to={"/myPosts"}>
+                  <TbUserScreen />
+                </Link>
+              </Button>
+            </TooltipWrapper>
+          </div>
+        )}
         <ThemeToggle />
         <Signup />
       </div>
